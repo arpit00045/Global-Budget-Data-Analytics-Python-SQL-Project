@@ -262,13 +262,13 @@ def get_engine():
     # so we guard the whole block with try/except.
     try:
         db_user = st.secrets.get("DB_USER", "root")
-        db_password = st.secrets.get("DB_PASSWORD", "Arpit@2005")
+        db_password = st.secrets.get("DB_PASSWORD", "1243")
         db_host = st.secrets.get("DB_HOST", "localhost")
         db_port = st.secrets.get("DB_PORT", "3306")
         db_name = st.secrets.get("DB_NAME", "global_budget_db")
     except Exception:
         db_user = "root"
-        db_password = "Arpit@2005"
+        db_password = "1243"
         db_host = "localhost"
         db_port = "3306"
         db_name = "global_budget_db"
