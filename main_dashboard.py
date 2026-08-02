@@ -10,9 +10,22 @@ st.set_page_config(page_title="Global Budget Analytics Core", layout="wide")
 
 
 def get_engine():
-    password_quoted = urllib.parse.quote_plus("Arpit@2005")
+    try:
+        db_user = st.secrets.get("DB_USER", "root")
+        db_password = st.secrets.get("DB_PASSWORD", "Arpit@2005")
+        db_host = st.secrets.get("DB_HOST", "localhost")
+        db_port = st.secrets.get("DB_PORT", "3306")
+        db_name = st.secrets.get("DB_NAME", "global_budget_db")
+    except Exception:
+        db_user = "root"
+        db_password = "Arpit@2005"
+        db_host = "localhost"
+        db_port = "3306"
+        db_name = "global_budget_db"
+
+    password_quoted = urllib.parse.quote_plus(db_password)
     return create_engine(
-        f"mysql+mysqlconnector://root:{password_quoted}@localhost/global_budget_db"
+        f"mysql+mysqlconnector://{db_user}:{password_quoted}@{db_host}:{db_port}/{db_name}"
     )
 
 
