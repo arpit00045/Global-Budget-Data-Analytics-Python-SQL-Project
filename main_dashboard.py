@@ -128,6 +128,128 @@ div[data-testid="stMetric"] {
     padding: 10px 14px;
     border: 1px solid rgba(255,255,255,0.1);
 }
+
+/* --------------------------------------------------------------------
+   RESPONSIVE / MOBILE ADJUSTMENTS
+   -------------------------------------------------------------------- */
+
+/* Reduce outer page padding so content isn't cramped on small screens,
+   but keep enough top clearance so content doesn't hide behind
+   Streamlit's fixed top toolbar (hamburger menu / Deploy button bar) */
+.block-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 3rem;
+    max-width: 100%;
+}
+
+/* Tablets and small laptops */
+@media (max-width: 992px) {
+    .hero-title { font-size: 2.1rem; }
+    .hero-subtitle { font-size: 0.95rem; }
+    .kpi-value { font-size: 1.6rem; }
+    .kpi-label { font-size: 0.78rem; }
+    .section-header { font-size: 1.3rem; }
+    button[data-baseweb="tab"] { font-size: 0.9rem; padding: 6px 10px; }
+}
+
+/* Phones / narrow screens */
+@media (max-width: 640px) {
+    .block-container {
+        padding-left: 0.6rem;
+        padding-right: 0.6rem;
+        padding-top: 3.5rem;
+    }
+    .hero-title { font-size: 1.5rem; line-height: 1.3; }
+    .hero-subtitle { font-size: 0.85rem; margin-bottom: 1rem; }
+    .kpi-card { padding: 12px 14px; margin-bottom: 10px; }
+    .kpi-value { font-size: 1.3rem; }
+    .kpi-label { font-size: 0.7rem; }
+    .kpi-delta-up, .kpi-delta-down { font-size: 0.8rem; }
+    .section-header {
+        font-size: 1.1rem;
+        border-left-width: 4px;
+        padding-left: 8px;
+        margin: 0.9rem 0 0.5rem 0;
+    }
+    /* Stack tabs into a wrapped row instead of overflowing horizontally */
+    div[data-baseweb="tab-list"] {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    button[data-baseweb="tab"] {
+        font-size: 0.8rem;
+        padding: 6px 8px;
+    }
+}
+
+/* Make Plotly charts and dataframes scroll horizontally on tiny screens
+   instead of squashing/breaking their layout */
+div[data-testid="stPlotlyChart"], div[data-testid="stDataFrame"] {
+    overflow-x: auto;
+}
+
+/* --------------------------------------------------------------------
+   THEME-CONSISTENT TEXT COLORS
+   -------------------------------------------------------------------- */
+
+/* Default body / markdown text */
+.stApp, .stApp p, .stApp span, .stApp label, .stApp li {
+    color: #e5e7eb;
+}
+
+/* Native st.header / st.subheader / st.title / st.write bold text */
+.stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5 {
+    color: #ffffff !important;
+}
+
+/* st.markdown bold/emphasis text */
+.stApp strong { color: #ffffff; }
+
+/* Captions (sidebar tips etc.) */
+.stApp [data-testid="stCaptionContainer"] {
+    color: #c4b5fd !important;
+}
+
+/* Selectbox / dropdown widget text */
+div[data-baseweb="select"] * {
+    color: #f5f3ff !important;
+}
+div[data-baseweb="select"] > div {
+    background-color: rgba(255,255,255,0.07) !important;
+    border-color: rgba(255,255,255,0.2) !important;
+}
+
+/* Number input / slider / checkbox labels */
+.stApp .stSlider label, .stApp .stNumberInput label, .stApp .stCheckbox label {
+    color: #e5e7eb !important;
+}
+.stApp .stSlider [data-testid="stTickBar"] { color: #c4b5fd; }
+
+/* Slider track accent color to match theme */
+div[data-baseweb="slider"] div[role="slider"] {
+    background-color: #7C4DFF !important;
+}
+
+/* st.info / st.success / st.warning boxes: keep readable text on their tinted backgrounds */
+div[data-testid="stAlert"] p {
+    color: inherit;
+}
+
+/* Dataframe text and header row */
+div[data-testid="stDataFrame"] * {
+    color: #1f2937;
+}
+
+/* st.metric native widget text (fallback KPI, if used anywhere) */
+div[data-testid="stMetric"] label,
+div[data-testid="stMetric"] div {
+    color: #f5f3ff !important;
+}
+
+/* Links */
+.stApp a { color: #40C4FF; }
+.stApp a:hover { color: #00E5FF; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -140,13 +262,13 @@ def get_engine():
     # so we guard the whole block with try/except.
     try:
         db_user = st.secrets.get("DB_USER", "root")
-        db_password = st.secrets.get("DB_PASSWORD", "1243")
+        db_password = st.secrets.get("DB_PASSWORD", "Arpit@2005")
         db_host = st.secrets.get("DB_HOST", "localhost")
         db_port = st.secrets.get("DB_PORT", "3306")
         db_name = st.secrets.get("DB_NAME", "global_budget_db")
     except Exception:
         db_user = "root"
-        db_password = "1243"
+        db_password = "Arpit@2005"
         db_host = "localhost"
         db_port = "3306"
         db_name = "global_budget_db"
@@ -372,8 +494,13 @@ with tab_research_lab:
             labels=dict(color="Correlation Coefficient"),
             template="plotly_dark"
         )
-        fig_heat.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
-                                font=dict(family="Poppins", size=12))
+        fig_heat.update_layout(
+            plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+            font=dict(family="Poppins", size=12, color="#f5f3ff"),
+            margin=dict(t=90, l=10, r=10, b=10),
+        )
+        fig_heat.update_xaxes(side="top", tickangle=-30, tickfont=dict(color="#f5f3ff"))
+        fig_heat.update_yaxes(tickfont=dict(color="#f5f3ff"))
         st.plotly_chart(fig_heat, use_container_width=True)
 
     # --- Volatility Index & Rolling Statistics ---
