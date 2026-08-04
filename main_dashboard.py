@@ -496,12 +496,14 @@ with tab_research_lab:
         )
         fig_heat.update_layout(
             plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
-            font=dict(family="Poppins", size=12, color="#f5f3ff"),
-            margin=dict(t=90, l=10, r=10, b=10),
+            font=dict(family="Poppins", size=11, color="#f5f3ff"),
+            margin=dict(t=110, l=10, r=10, b=10),
+            height=520,
         )
-        fig_heat.update_xaxes(side="top", tickangle=-30, tickfont=dict(color="#f5f3ff"))
-        fig_heat.update_yaxes(tickfont=dict(color="#f5f3ff"))
-        st.plotly_chart(fig_heat, use_container_width=True)
+        fig_heat.update_xaxes(side="top", tickangle=-45, tickmode="linear", dtick=1,
+                               tickfont=dict(color="#f5f3ff", size=11))
+        fig_heat.update_yaxes(tickfont=dict(color="#f5f3ff", size=11), tickmode="linear", dtick=1)
+        st.plotly_chart(fig_heat, use_container_width=True, config={"responsive": True})
 
     # --- Volatility Index & Rolling Statistics ---
     st.subheader("Volatility Index & Rolling Statistics")
